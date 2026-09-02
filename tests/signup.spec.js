@@ -40,7 +40,7 @@ test('Sign up',async({page})=>
 )
 
 //Sign up and close
-test.only('Sign up and close',async({page})=>
+test('Sign up and close',async({page})=>
 {
     const obj1 = new signup(page)
     await obj1.accessurl()

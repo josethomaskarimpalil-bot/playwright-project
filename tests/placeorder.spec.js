@@ -84,7 +84,7 @@ test('login select a product under phones add to cart add details and purchase',
  )
 
 //login select a product under monitors add to cart add details and purchase
-test.only('login select a product under monitors add to cart add details and purchase',async({page})=>
+test('login select a product under monitors add to cart add details and purchase',async({page})=>
 {
     let obj2 = new login(page)
    await obj2.accessurl()
