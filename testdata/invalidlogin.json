@@ -1,0 +1,14 @@
+[
+    {
+        "username":"standard_user1",
+        "password":"jose_thomas"
+    },
+    {
+        "username":"jose_thomas",
+        "password":"secret_sauce1"
+    },
+    {
+        "username":"performance_glitch_use1",
+        "password":"secret_sauce1"
+    }
+]
