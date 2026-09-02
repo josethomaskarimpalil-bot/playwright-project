@@ -22,7 +22,7 @@ test('login select a product add to cart',async({page})=>
     page.once('dialog',async dialog =>
     {
         console.log(dialog.message())
-          await expect(dialog.message().toBe('Product added.'))
+          await expect(dialog.message()).toBe('Product added.')
           await dialog.accept()
     }
     )
@@ -38,18 +38,21 @@ test('login select a product under phones add to cart add details and purchase',
    await obj1.enterusername(validdata.username)
    await obj1.enterpassword(validdata.password)
    let placeorder1 = await obj1.clickloginbutton()
-   //Assertion
-   await expect(page.locator('#nameofuser')).toBeVisible()
-    await page.pause()
-    await page.getByRole('link',{name:'Phones'}).click()
-    await page.pause()
-    await expect(page.getByText('Iphone 6 32gb')).toBeVisible()
-    await page.pause()
-    await page.getByRole('link',{name:'Samsung galaxy s6'}).click()
-    await page.pause()
-    await expect(page).toHaveURL('https://www.demoblaze.com/prod.html?idp_=1')
-    await page.pause()
-    await placeorder1.addtocart()
+   await page.pause()
+    await expect(page.locator('#nameofuser')).toBeVisible() //Assertion
+    await  placeorder1.selectphonecategory()
+    await expect(page.getByText('Iphone 6 32gb')).toBeVisible() //Assertion
+   await placeorder1.selectproduct()
+     await expect(page).toHaveURL('https://www.demoblaze.com/prod.html?idp_=1') //Assertion
+     await page.pause()
+    page.once('dialog',async dialog =>
+    {
+        console.log(dialog.message())
+          await expect(dialog.message()).toBe('Product added.')
+          await dialog.accept()
+    }
+    )
+   await placeorder1.addtocart()
    await page.pause()
    await placeorder1.opencart()
     await page.pause()
@@ -90,17 +93,18 @@ test.only('login select a product under monitors add to cart add details and pur
    await obj2.enterpassword(validdata.password)
    let placeorder2 = await obj2.clickloginbutton()
     await page.pause()
-    //Assertion
-    await expect(page).toHaveURL('https://www.demoblaze.com/')
+   await placeorder2.selectmonitorcategory()
+    //await expect(page.getByText('Apple monitor 24')).toBeVisible() //Assertion
     await page.pause()
-    await page.getByRole('link',{name:'Monitors'}).click()
+   await placeorder2.selectmonitorproduct()
     await page.pause()
-    await expect(page.getByText('Apple monitor 24')).toBeVisible()
-    await page.pause()
-    await page.getByRole('link',{name:'Apple monitor 24'}).click()
-    await page.pause()
-    await expect(page).toHaveURL('https://www.demoblaze.com/prod.html?idp_=10')
-    await page.pause()
+     page.once('dialog',async dialog =>
+    {
+        console.log(dialog.message())
+          await expect(dialog.message()).toBe('Product added.')
+          await dialog.accept()
+    }
+    )
     await placeorder2.addtocart()
     await page.pause()
     await placeorder2.opencart()

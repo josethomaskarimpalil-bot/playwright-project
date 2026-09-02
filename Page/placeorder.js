@@ -5,6 +5,9 @@ class placeoreder
     {
         this.page = page
         this.selectproductfield =  page.getByRole('link',{name:'Samsung galaxy s6'})
+        this.selectphonecategoryfield = page.locator('//a[text()="Phones"]')
+        this.selectmonitorcategoryfield = page.locator('//a[text()="Monitors"]')
+        this.monitorfield = page.locator('//a[text()="Apple monitor 24"]')
         this.addtocartfield = page.getByRole('link',{name:'Add to cart'})
         this.opencartfield = page.locator('#cartur')
         this.placeorderfield = page.locator('//button[text()="Place Order"]')
@@ -16,14 +19,28 @@ class placeoreder
         this.enteryearfield = page.locator('#year')
         this.purchasebuttonfield = page.locator('//button[text()="Purchase"]')
     }
-    async selectproduct(product)
+    async selectphonecategory()
     {
-     await this.page.locator('//a[text()="${product}"]').click()
+        await this.selectphonecategoryfield.click()
+        return this
+    }
+    async selectproduct()
+    {
+     await this.selectproductfield.click()
      return this
+    }
+    async selectmonitorcategory()
+    {
+        await this.selectmonitorcategoryfield.click()
+        return this
+    }
+    async selectmonitorproduct()
+    {
+        await this.monitorfield.click()
     }
     async addtocart()
     {
-       await  this.addtocartfield.click()
+       await this.addtocartfield.click()
        return this
     }
     async opencart()
