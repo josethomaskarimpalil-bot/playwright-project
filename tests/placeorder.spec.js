@@ -16,6 +16,7 @@ test('login select a product add to cart',async({page})=>
    let placeorder = await obj.clickloginbutton()
    //Assertion
     await expect(page.locator('#nameofuser')).toBeVisible()
+    await placeorder.clearcart()
     await placeorder.selectproduct('Samsung galaxy s6')
     await expect(page).toHaveURL('https://www.demoblaze.com/prod.html?idp_=1')
     await page.pause()
@@ -40,6 +41,7 @@ test('login select a product under phones add to cart add details and purchase',
    let placeorder1 = await obj1.clickloginbutton()
    await page.pause()
     await expect(page.locator('#nameofuser')).toBeVisible() //Assertion
+    await placeorder1.clearcart()
     await  placeorder1.selectphonecategory()
     await expect(page.getByText('Iphone 6 32gb')).toBeVisible() //Assertion
    await placeorder1.selectproduct()
@@ -84,7 +86,7 @@ test('login select a product under phones add to cart add details and purchase',
  )
 
 //login select a product under monitors add to cart add details and purchase
-test('login select a product under monitors add to cart add details and purchase',async({page})=>
+test.only('login select a product under monitors add to cart add details and purchase',async({page})=>
 {
     let obj2 = new login(page)
    await obj2.accessurl()
@@ -93,6 +95,7 @@ test('login select a product under monitors add to cart add details and purchase
    await obj2.enterpassword(validdata.password)
    let placeorder2 = await obj2.clickloginbutton()
     await page.pause()
+    await placeorder2.clearcart()
    await placeorder2.selectmonitorcategory()
     //await expect(page.getByText('Apple monitor 24')).toBeVisible() //Assertion
     await page.pause()

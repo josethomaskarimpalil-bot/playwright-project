@@ -48,6 +48,19 @@ class placeoreder
         await this.opencartfield.click()
         return this
     }
+    async clearcart()
+    {
+        await this.opencart()
+        const deletebutton = this.page.locator('//a[text()="Delete"]')
+        if(await deletebutton.count() > 0)
+        {
+            await deletebutton.first().click()
+            
+        }
+       const producttext =  await this.page.getByText("PRODUCT STORE")
+       await producttext.click()
+        return this
+    }
     async placeorder()
     {
         await this.placeorderfield.click()
