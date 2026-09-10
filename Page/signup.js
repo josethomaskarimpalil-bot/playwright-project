@@ -18,14 +18,14 @@ async clicksignup()
     await this.signupfield.click()
     return this
 }
-async enterusername()
+async enterusername(username)
 {
-     await this.usernamefield.fill('jose_thomas')
+     await this.usernamefield.fill(username)
      return this
 }
-async enterpassword()
+async enterpassword(password)
 {
-    await  this.passwordfield.fill('jose_thomas')
+    await  this.passwordfield.fill(password)
     return this
 }
 async clicksignupbutton()
