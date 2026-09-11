@@ -1,14 +1,12 @@
-class signout
-{
-    constructor(page)
-    {
-        this.page = page
-        this.signoutbuttonfield = page.locator('#logout2')
+class SignOut{
+    constructor(page){
+        this.page=page
+        this.signoutfield=page.locator('#logout2')
     }
-    async clicksignoutbutton()
-    {
-      await this.signoutbuttonfield.click()
-      return this
+
+    async signout(){
+        await  this.signoutfield.click()
+        return this
     }
 }
-module.exports = signout
+module.exports=SignOut

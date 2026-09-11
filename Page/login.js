@@ -1,41 +1,40 @@
-const placeoreder = require("./placeorder")
-
-class login
+const PlaceOrder = require("./placeorder")
+class Login 
 {
-constructor(page)
-    {
+    constructor(page){
         this.page=page
-        this.loginfield = page.locator('#login2')
-        this.usernamefield = page.locator('#loginusername')
-        this.passwordfield = page.locator('#loginpassword')
-        this.loginbuttonfield = page.locator('//button[text()="Log in"]')
+        this.loginfield=page.locator('#login2')
+        this.usernamefield=page.locator('#loginusername')
+        this.passwordfield=page.locator('#loginpassword')
+        this.loginbutton=page.locator('//button[@onclick="logIn()"]')
 
     }
-    async accessurl()
-    {
-        await this.page.goto('https://www.demoblaze.com/')
-        return this
+
+    async accessUrl(){
+        await this.page.goto("https://www.demoblaze.com")
     }
-    async clicklogin()
-    {
+    async clickLogin(){
         await this.loginfield.click()
         return this
     }
-   async enterusername(username)
-    {
-     await this.usernamefield.fill(username)
-     return this
-    }
-async enterpassword(password)
-{
-    await this.passwordfield.fill(password)
-    return this
-}
-async clickloginbutton()
-{
-   await this.loginbuttonfield.click() 
-   return new placeoreder(this.page)
-}
-}
-module.exports = login
 
+    async enterUsername(username)
+    {
+        await  this.usernamefield.fill(username)
+        return this
+    }
+
+    async enterPassword(password)
+    {
+        await this.passwordfield.fill(password)
+        return this
+    }
+
+    async clickLoginButton()
+    {
+        await this.loginbutton.click()
+        
+       return new PlaceOrder(this.page)
+    }
+}
+module.exports= Login

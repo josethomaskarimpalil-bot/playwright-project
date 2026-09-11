@@ -1,0 +1,132 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: login.spec.js >> valid login
+- Location: tests\login.spec.js:7:6
+
+# Error details
+
+```
+Error: expect(locator).toHaveText(expected) failed
+
+Locator:  locator('#nameofuser')
+Expected: "Welcome jose-thomas"
+Received: "Welcome jose_thomas"
+Timeout:  5000ms
+
+Call log:
+  - Expect "toHaveText" with timeout 5000ms
+  - waiting for locator('#nameofuser')
+    8 × locator resolved to <a href="#" id="nameofuser" class="nav-link"></a>
+      - unexpected value ""
+    6 × locator resolved to <a href="#" id="nameofuser" class="nav-link">Welcome jose_thomas</a>
+      - unexpected value "Welcome jose_thomas"
+
+```
+
+```yaml
+- link "Welcome jose_thomas":
+  - /url: "#"
+```
+
+# Test source
+
+```ts
+  1  | const {test,expect}=require('@playwright/test')
+  2  | const validlogincred=require('../testdata/logindata.json')
+  3  | const dataset=require('../testdata/invalidlogin.json')
+  4  | const Login = require('../Page/login')
+  5  | //login page actions
+  6  | //tc-3 valid login
+  7  | test.only('valid login',async({page})=>
+  8  | {
+  9  |     let obj2 = new Login(page)
+  10 |     await obj2.accessUrl()
+  11 |     await obj2.clickLogin()
+  12 |     await obj2.enterUsername(validlogincred.username)
+  13 |     await obj2.enterPassword(validlogincred.password)
+  14 |    const placeorder=await obj2.clickLoginButton() //navigation happens
+  15 |     await expect(page).toHaveURL("https://www.demoblaze.com/")
+> 16 |     await expect(page.locator('#nameofuser')).toHaveText("Welcome jose-thomas")
+     |                                               ^ Error: expect(locator).toHaveText(expected) failed
+  17 |     
+  18 | 
+  19 | })
+  20 | 
+  21 | 
+  22 | //tc-4 invalid user, valid pw
+  23 | test(`Login with invalid username and valid password ${dataset[0].username},${dataset[0].password}`,async({page})=>
+  24 | {
+  25 |      let obj3 = new Login(page)
+  26 |     await obj3.accessUrl()
+  27 |     await obj3.clickLogin()
+  28 |     await obj3.enterUsername(dataset[0].username)
+  29 |     await obj3.enterPassword(dataset[0].password)
+  30 | 
+  31 |     //handling alert
+  32 |     page.on('dialog',async(dialog2)=>
+  33 |     {
+  34 |         await page.pause()
+  35 |         expect(dialog2.message().toBe("User does not exist."))
+  36 |         await dialog2.accept()
+  37 |     })
+  38 | 
+  39 |    await obj3.clickLoginButton()
+  40 | 
+  41 | })
+  42 | 
+  43 | //tc-5 valid username,invalid pw
+  44 | test(`Login with valid username and invalid password ${dataset[1].username},${dataset[1].password}`,async({page})=>
+  45 | {
+  46 |     let obj4 = new Login(page)
+  47 |     await obj4.accessUrl()
+  48 |     await obj4.clickLogin()
+  49 |     await obj4.enterUsername(dataset[1].username)
+  50 |     await obj4.enterPassword(dataset[1].password)
+  51 | 
+  52 |     //handling alert
+  53 |     page.on('dialog',async(dialog2)=>
+  54 |     {
+  55 |         await page.pause()
+  56 |         expect(dialog2.message().toBe("Wrong password."))
+  57 |         await dialog2.accept()
+  58 |     })
+  59 | 
+  60 | 
+  61 | 
+  62 |     await obj4.clickLoginButton()
+  63 |     
+  64 | 
+  65 | })
+  66 | 
+  67 | //tc-6 invalid username,invalid pw
+  68 | 
+  69 | test(`Login with invalid  credentials ${dataset[2].username},${dataset[2].password}`,async({page})=>
+  70 | {
+  71 |      let obj5 = new Login(page)
+  72 |     await obj5.accessUrl()
+  73 |     await obj5.clickLogin()
+  74 |     await obj5.enterUsername(dataset[2].username)
+  75 |     await obj5.enterPassword(dataset[2].password)
+  76 | 
+  77 | 
+  78 |     //handling alert
+  79 |      page.on('dialog',async(dialog2)=>
+  80 |     {
+  81 |         await page.pause()
+  82 |         expect(dialog2.message().toBe("Wrong password."))
+  83 |         await dialog2.accept()
+  84 |     })
+  85 | 
+  86 | 
+  87 | 
+  88 |     await obj5.clickLoginButton()
+  89 |     await expect( page.getByRole('dialog', { name: 'Log in' })).toBeVisible()
+  90 | })
+  91 | 
+```

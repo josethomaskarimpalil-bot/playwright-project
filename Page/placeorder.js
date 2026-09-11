@@ -1,105 +1,92 @@
-const signout = require('..//Page//signout')
-class placeoreder
+const SignOut=require('../Page/signout')
+const{expect}=require('@playwright/test')
+class PlaceOrder
 {
-    constructor(page)
-    {
-        this.page = page
-        this.selectproductfield =  page.getByRole('link',{name:'Samsung galaxy s6'})
-        this.selectphonecategoryfield = page.locator('//a[text()="Phones"]')
-        this.selectmonitorcategoryfield = page.locator('//a[text()="Monitors"]')
-        this.monitorfield = page.locator('//a[text()="Apple monitor 24"]')
-        this.addtocartfield = page.getByRole('link',{name:'Add to cart'})
-        this.opencartfield = page.locator('#cartur')
-        this.placeorderfield = page.locator('//button[text()="Place Order"]')
-        this.enternamefield = page.locator('#name')
-        this.entercountryfield = page.locator('#country')
-        this.entercityfield = page.locator('#city')
-        this.entercarddetailsfield = page.locator('#card')
-        this.entermonthfield = page.locator('#month')
-        this.enteryearfield = page.locator('#year')
-        this.purchasebuttonfield = page.locator('//button[text()="Purchase"]')
+    constructor(page){
+        this.page=page
+        //this.selectitem= page.getByRole('link',{name:"Samsung galaxy s6"})
+       // this.monitorfield= page.getByText("Monitors")
+        //this.selectmonitor= page.getByRole('link',{name :"Apple monitor 24"})
+        this.addcartmonitor=page.locator('//a[@onclick="addToCart(10)"]')
+        this.addcart=page.locator('//a[@onclick="addToCart(1)"]')
+        this.clickcart=page.locator('//a[@id="cartur"]')
+        this.placeorderfield=page.getByRole('button',{name :"Place Order"})
+        this.namefield=page.locator('#name')
+        this.countryfield=page.locator('#country')
+        this.cityfield=page.locator('#city')
+        this.cardnum=page.locator('#card')
+        this.monthfield=page.locator('#month')
+        this.yearfield=page.locator('#year')
+        this.purchasefield=page.locator('//button[@onclick="purchaseOrder()"]')
     }
-    async selectphonecategory()
-    {
-        await this.selectphonecategoryfield.click()
+    async selectCategory(selectedcategory){
+        await this.page.getByRole('link',{name:selectedcategory}).click()
         return this
     }
-    async selectproduct()
-    {
-     await this.selectproductfield.click()
-     return this
-    }
-    async selectmonitorcategory()
-    {
-        await this.selectmonitorcategoryfield.click()
+
+
+    async selectproduct(product){
+        await this.page.getByRole('link', { name: product}).click()
         return this
     }
-    async selectmonitorproduct()
-    {
+    /*
+    async selectproductmonitor(){ //giving all monitor related actions in one function
         await this.monitorfield.click()
-    }
-    async addtocart()
+        await this.selectmonitor.click()
+        
+        return this
+    }*/
+
+    async addtocartmonitor()
     {
-       await this.addtocartfield.click()
-       return this
-    }
-    async opencart()
-    {
-        await this.opencartfield.click()
+        await this.addcartmonitor.click()
         return this
     }
-    async clearcart()
+
+    async addTocart(){
+        await this.addcart.click()
+        return this
+    }
+    async clickCart()
     {
-        await this.opencart()
-        const deletebutton = this.page.locator('//a[text()="Delete"]')
-        if(await deletebutton.count() > 0)
-        {
+        await this.clickcart.click()
+        return this
+    }
+
+    async clearCart(){
+        await this.clickCart()
+        const deletebutton=this.page.locator('//a[text()="Delete"]')
+        if(await deletebutton.count()>0){
             await deletebutton.first().click()
-            
         }
-       const producttext =  await this.page.getByText("PRODUCT STORE")
+       const producttext= await this.page.locator('//a[@id="nava"]')
        await producttext.click()
         return this
     }
-    async placeorder()
+    async placeOrder()
     {
         await this.placeorderfield.click()
         return this
     }
-    async entername()
+    async enterDetails()
     {
-      await this.enternamefield.fill('jose')
-      return this
+    await this.namefield.fill("Jose")
+    await this.countryfield.fill("India")
+    await this.cityfield.fill("Kottayam")
+    await this.cardnum.fill('12345')
+    await this.monthfield.fill("March")
+    await this.yearfield.fill('2026')
+    return this
     }
-    async entercountry()
+    async purchase()
     {
-     await  this.entercountryfield.fill('india')
-     return this
+        await this.purchasefield.click()
+        //await this.Okbutton.click()
+        return new SignOut(this.page)
+        
+
     }
-    async entercity()
-    {
-         await this.entercityfield.fill('kottayam')
-         return this
-    }
-    async entercarddetails()
-    {
-        await this.entercarddetailsfield.fill('12345')
-        return this
-    }
-    async entermonth()
-    {
-     await this.entermonthfield.fill('January')
-     return this
-    }
-    async enteryear()
-    {
-        await this.enteryearfield.fill('2026')
-        return this
-    }
-    async clickpurchasebutton()
-    {
-     await this.purchasebuttonfield.click()
-     return new signout(this.page)
-    }
+    
+
 }
-module.exports = placeoreder
+module.exports=PlaceOrder

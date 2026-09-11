@@ -1,74 +1,83 @@
-const{test,expect}=require('@playwright/test')
-const validdata = require('..//testdata//logindata.json')
-const dataset = require('..//testdata//invalidlogin.json')
-const login = require('../Page/login')
-const placeorder = require('..//Page//placeorder')
-//Login with valid credentials
-test('Login with valid credentials',async({page})=>
+const {test,expect}=require('@playwright/test')
+const validlogincred=require('../testdata/logindata.json')
+const dataset=require('../testdata/invalidlogin.json')
+const Login = require('../Page/login')
+//login page actions
+//tc-3 valid login
+test('valid login',async({page})=>
 {
-  let obj = new login(page)
-   await obj.accessurl()
-   await obj.clicklogin()
-   await obj.enterusername(validdata.username)
-   await obj.enterpassword(validdata.password)
-   let placeorder = await obj.clickloginbutton()
-//Assertion
-await expect(page.locator('#nameofuser')).toBeVisible()
-}
-)
-//login with invalid username and valid password
-test(`login with invalid username and valid password ${dataset[0].username},${dataset[0].password}`,async({page})=>
-{
-   let obj1 = new login(page)
-   await obj1.accessurl()
-   await obj1.clicklogin()
-   await obj1.enterusername(dataset[0].username)
-   await obj1.enterpassword(dataset[0].password)
+    let obj2 = new Login(page)
+    await obj2.accessUrl()
+    await obj2.clickLogin()
+    await obj2.enterUsername(validlogincred.username)
+    await obj2.enterPassword(validlogincred.password)
+   const placeorder=await obj2.clickLoginButton() //navigation happens
+    await expect(page).toHaveURL("https://www.demoblaze.com/")
+    await expect(page.locator('#nameofuser')).toHaveText("Welcome jose_thomas")
+ }
+  )
 
-    page.once('dialog',async dialog =>
-    {
-         await expect(dialog.message()).toBe('User does not exist')
-          await dialog.accept()
-    }
-    )
-    let placeorder1 = await obj1.clickloginbutton()
-  }
-)
 
-//login with valid username and invalid password
-test(`login with valid username and invalid password ${dataset[1].username},${dataset[1].password}`,async({page})=>
+//tc-4 invalid user, valid pw
+test(`Login with invalid username and valid password ${dataset[0].username},${dataset[0].password}`,async({page})=>
 {
-   let obj2 = new login(page)
-   await obj2.accessurl()
-   await obj2.clicklogin()
-   await obj2.enterusername(dataset[1].username)
-   await obj2.enterpassword(dataset[1].password)
-   
-     page.once('dialog',async dialog =>
-    {
-         await expect(dialog.message()).toBe('Wrong password.')
-          await dialog.accept()
-    }
-    )
-    let placeorder2 =  await obj2.clickloginbutton()
-  }
-)
+     let obj3 = new Login(page)
+    await obj3.accessUrl()
+    await obj3.clickLogin()
+    await obj3.enterUsername(dataset[0].username)
+    await obj3.enterPassword(dataset[0].password)
 
-//login with invalid username and invalid password
-test(`login with invalid username and invalid password ${dataset[2].username},${dataset[2].password}`,async({page})=>
-{
-    let obj3 = new login(page)
-   await obj3.accessurl()
-   await obj3.clicklogin()
-   await obj3.enterusername(dataset[2].username)
-   await obj3.enterpassword(dataset[2].password)
-     page.once('dialog',async dialog =>
+    //handling alert
+    page.on('dialog',async(dialog2)=>
     {
-        console.log(dialog.message())
-           await expect(dialog.message()).toBe('User does not exist')
-          await dialog.accept()
+        expect(dialog2.message().toBe("User does not exist."))
+        await dialog2.accept()
     }
-    )
-    let placeorder3 = await obj3.clickloginbutton()
-  }
-)
+  )
+
+   await obj3.clickLoginButton()
+ await expect( page.getByRole('dialog', { name: 'Log in' })).toBeVisible()
+})
+
+//tc-5 valid username,invalid pw
+test(`Login with valid username and invalid password ${dataset[1].username},${dataset[1].password}`,async({page})=>
+{
+    let obj4 = new Login(page)
+    await obj4.accessUrl()
+    await obj4.clickLogin()
+    await obj4.enterUsername(dataset[1].username)
+    await obj4.enterPassword(dataset[1].password)
+
+    //handling alert
+    page.on('dialog',async(dialog2)=>
+    {
+        await page.pause()
+        expect(dialog2.message().toBe("Wrong password."))
+        await dialog2.accept()
+    })
+
+    await obj4.clickLoginButton()
+     await expect( page.getByRole('dialog', { name: 'Log in' })).toBeVisible()
+    })
+
+//tc-6 invalid username,invalid pw
+
+test(`Login with invalid  credentials ${dataset[2].username},${dataset[2].password}`,async({page})=>
+{
+     let obj5 = new Login(page)
+    await obj5.accessUrl()
+    await obj5.clickLogin()
+    await obj5.enterUsername(dataset[2].username)
+    await obj5.enterPassword(dataset[2].password)
+ 
+    //handling alert
+     page.on('dialog',async(dialog2)=>
+    {
+        await page.pause()
+        expect(dialog2.message().toBe("Wrong password."))
+        await dialog2.accept()
+    })
+
+    await obj5.clickLoginButton()
+    await expect( page.getByRole('dialog', { name: 'Log in' })).toBeVisible()
+})

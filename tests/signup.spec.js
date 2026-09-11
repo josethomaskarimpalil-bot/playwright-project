@@ -1,66 +1,43 @@
 const{test,expect}=require('@playwright/test')
-const signup = require('..//Page/signup')
-//const validdata = require('..//testdata/logindata.json')
-const{faker} = require('@faker-js/faker') //faker class package import
-test.beforeEach(async({page})=>
-{
-    await page.goto('https://www.demoblaze.com/')
-    await page.pause()
-}
-)
+const{faker}=require('@faker-js/faker')
+const signup = require('../Page/signup')
 
-//Sigunup
+test.beforeEach(async ({page}) =>
+{
+    await page.goto("https://www.demoblaze.com")
+})
+
 test('Sign up',async({page})=>
 {
-    const obj = new signup(page)
-    await obj.accessurl()
-    await page.pause()
-    await obj.clicksignup()
-    await page.pause()
-    const username = 'user'+Date.now()
-    const password = 'pass'+Date.now()
+   let obj1 = new signup(page) //here it invokes constructor
+    await obj1.clickSignup()
+     const username= 'user' + Date.now() //generate dynamic username n pw
+    const password='pass' + Date.now()
     console.log(username)
     console.log(password)
-    await obj.enterusername(username)
-    await page.pause()
-    await obj.enterpassword(password)
-    await page.pause()
-     page.once('dialog',async dialog =>
+    await obj1.enterUserName(username)
+    await obj1.enterPassword(password)
+    page.on('dailog',async(dailog1)=>
     {
-        console.log(dialog.message())
-          expect(dialog.message())
-          await dialog.accept()
+        expect(dailog1.message()).toBe("Sign up successful.")
+        await dailog1.accept()
     }
     )
-    await obj.clicksignupbutton()
-    await page.pause()
-    //Assertion
-    await expect(page).toHaveURL('https://www.demoblaze.com/')
-   }
-)
-
-//Sign up and close
-test('Sign up and close',async({page})=>
-{
-    const obj1 = new signup(page)
-    await obj1.accessurl()
-    await page.pause()
-    await obj1.clicksignup()
-    await page.pause()
-    //Generate random  data by faker class
-    const username = faker.internet.username()
-    const password = faker.internet.password({
-        length:10
+  await obj1.clickSignupbutton()
+  await expect(page).toHaveURL("https://www.demoblaze.com/")
     })
-    console.log(username)
-    console.log(password)
-    await obj1.enterusername(username)
-    await page.pause()
-    await obj1.enterpassword(password)
-    await page.pause()
-    await obj1.clickclosebutton()
-    await page.pause()
-    //Assertion
-    await expect(page).toHaveURL('https://www.demoblaze.com/')
-}
-)
+//tc-2 signup n close
+
+test('Sign up close', async({page})=>
+{
+    let obj1 = new signup(page)
+    await obj1.clickSignup()
+    //generate random data by faker class
+    const username=faker.internet.username()
+    const password = faker.internet.password( {length:10})
+    console.log(username,password)
+    await obj1.enterUserName(username)
+    await obj1.enterPassword(password)
+    await obj1.clickClosebutton()
+    await expect(page).toHaveURL("https://www.demoblaze.com/")
+})
