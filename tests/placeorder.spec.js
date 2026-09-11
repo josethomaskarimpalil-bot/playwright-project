@@ -64,7 +64,7 @@ test('Purchase Phone',async ({page})=>
    
 })
 // tc-9 purchase monitor
-test.only('Purchase Monitor',async ({page})=>
+test('Purchase Monitor',async ({page})=>
 {
     let obj2 = new Login(page)
     await obj2.accessUrl()
